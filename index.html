@@ -332,5 +332,99 @@
     window.open(url, '_blank');
   }
 </script>
+
+  <!-- MUSIC TOGGLE BUTTON -->
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle music" style="
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.5);
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #c9a84c;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  ">♪</button>
+
+  <!-- HIDDEN YOUTUBE PLAYER -->
+  <div id="yt-container" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;">
+    <div id="yt-player"></div>
+  </div>
+
+  <script>
+    var player;
+    var isPlaying = false;
+    var playerReady = false;
+
+    // Load YouTube IFrame API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = function() {
+      player = new YT.Player('yt-player', {
+        height: '1',
+        width: '1',
+        videoId: 'GBw8-_INgrU',
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          loop: 1,
+          playlist: 'GBw8-_INgrU',
+          modestbranding: 1,
+          rel: 0
+        },
+        events: {
+          onReady: function(e) {
+            playerReady = true;
+            e.target.setVolume(70);
+          }
+        }
+      });
+    };
+
+    function toggleMusic() {
+      var btn = document.getElementById('music-btn');
+      if (!playerReady) return;
+      if (isPlaying) {
+        player.pauseVideo();
+        isPlaying = false;
+        btn.style.color = '#c9a84c';
+        btn.style.borderColor = 'rgba(201,168,76,0.5)';
+        btn.innerHTML = '♪';
+      } else {
+        player.playVideo();
+        isPlaying = true;
+        btn.style.color = '#e8d5a0';
+        btn.style.borderColor = 'rgba(232,213,160,0.9)';
+        btn.style.boxShadow = '0 4px 24px rgba(201,168,76,0.35)';
+        btn.innerHTML = '♫';
+      }
+    }
+
+    // Pulse animation on the button
+    var musicBtn = document.getElementById('music-btn');
+    musicBtn.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.1)';
+      this.style.borderColor = 'rgba(232,213,160,0.8)';
+    });
+    musicBtn.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+      if (!isPlaying) this.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  </script>
+
 </body>
 </html>
